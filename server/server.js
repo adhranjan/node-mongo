@@ -1,6 +1,7 @@
 /**************** BUILTIN IMPORTS *********/
 var express = require('express');
 var bodyParser = require('body-parser');
+const {ObjectID} = require('mongodb')
 /**************** BUILTIN IMPORTS *********/
 
 /**************** LOCAL IMPORTS *********/
@@ -33,6 +34,19 @@ app.get('/todos',(request,response)=>{
   })
 
 })
+
+app.get('/todos/:id',(request,response)=>{
+  var id = request.params.id
+  if(!ObjectID.isValid(id)){
+      return response.status(400).send();
+  }
+  Todo.findById(id).then((todo)=>{
+      response.send({todo})
+  }).catch((e)=>{
+    console.log(1)
+  })
+})
+
 
 
 app.listen(3000,()=>{
