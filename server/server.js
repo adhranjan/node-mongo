@@ -9,9 +9,12 @@ const {ObjectID} = require('mongodb')
 var {mongoose} = require('./db/mongoose');
 var {Todo} = require('./models/todo');
 var {User} = require('./models/user');
+var {authenticate} = require('./middleware/authenticate');
+
 /**************** LOCAL IMPORTS *********/
 
 var app = express();
+
 app.use(bodyParser.json());
 
 app.post('/todos',(request,response)=>{
@@ -87,6 +90,40 @@ app.patch('/todos/:id',(request,response)=>{
     response.status(400).send()
   })
 
+})
+
+
+app.post('/users',(request,response)=>{
+  var body = _.pick(request.body,['email','password'])
+  var user = new User(body)
+
+  user.generateAuthToken().then((token)=>{
+    response.header('x-auth',token).send(user);
+  }).catch((error)=>{
+    response.status(400).send(error)
+  })
+})
+
+
+// var authenticate = (request,response,next) => {
+//   token = request.header('x-auth');
+//   User.findByToken(token).then((user)=>{
+//     console.log(user)
+//     if(!user){
+//         return Promise.reject('No Document')
+//     }
+//     console.log(user)
+//     request.user = user
+//     request.token = token
+//     next()
+//   }).catch((error)=>{
+//     response.status(401).send({body:error})
+//   })
+//
+// }
+
+app.get('/users/me',authenticate,(request,response)=>{
+  response.send(request.user);
 })
 
 app.listen(3000,()=>{

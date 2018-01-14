@@ -1,6 +1,5 @@
 var mongoose = require('mongoose')
 
-
 var Todo = mongoose.model('Todo',{
   text:{
     type:String,
@@ -19,15 +18,3 @@ var Todo = mongoose.model('Todo',{
 });
 
 module.exports = {Todo};
-//
-// var newTodo = new Todo({
-//   text:'    apple banana    ',
-//   completedAt:1200
-// })
-//
-// newTodo.save().then((doc)=>{
-//   console.log(doc)
-// },(e)=>{
-//   console.log('Something went wrong')
-//   console.log(JSON.stringify(e,undefined,2))
-// })
