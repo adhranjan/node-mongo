@@ -45,6 +45,20 @@ UserSchema.methods.generateAuthToken = function () {
   });
 };
 
+/*
+* Add token in user list
+*/
+UserSchema.methods.addToken = function(token){
+  var user = this
+
+  return user.update({
+    $push:{
+      tokens:{token}
+    }
+  });
+}
+
+
 
 UserSchema.methods.removeToken = function(token){
   var user = this
